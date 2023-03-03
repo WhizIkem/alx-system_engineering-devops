@@ -2,9 +2,9 @@
 
 # On the 9th iteration, display "Best School" then "Hi"  in new line
 
-count=0
+count=1
 
-while [ $count -lt 10]
+while [ $count -le 10 ]
 do
 	echo "Best School"
 	if [ $count -eq 9 ]
