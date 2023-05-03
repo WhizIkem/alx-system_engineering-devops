@@ -1,1 +1,5 @@
 #!/usr/bin/env bash
+# script that installs apache2 zto run on the container and return a page containing Hello Holberton
+apt-get update
+apt-get -y install apache2
+service apache2 restart
