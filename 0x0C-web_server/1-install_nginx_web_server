@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Bash script that install nginx on your web-01 server
+sudo apt update
+sudo apt install nginx -y
+# Firewall- port 80
+sudo ufw allow 'Nginx HTTP'
+# Index file and start
+echo "Hello World!" > /var/www/index.html
+sudo service nginx start
