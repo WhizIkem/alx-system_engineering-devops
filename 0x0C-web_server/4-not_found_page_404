@@ -12,6 +12,6 @@ sed -i "/server_name _;/a rewrite ^/redirect_me https://www.youtube.com/watch?v=
 # 404 file
 echo "Ceci n'est pas une page" > /usr/share/nginx/html/404.html
 # make the redirection to 404
-sed -i "/listen 80 default_server/a error_page 404 /404html; location = /404.html {root /usr/share/nginx/html;\n internal;}" /etc/nginx/sites-available/default
+sed -i "/listen 80 default_server/a error_page 404 /404.html; location = /404.html {root /usr/share/nginx/html;\n internal;}" /etc/nginx/sites-available/default
 # restart nginx server
 sudo service nginx restart
