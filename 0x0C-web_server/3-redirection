@@ -5,7 +5,7 @@ sudo apt install nginx -y
 # Firewall- port 80
 sudo ufw allow 'Nginx HTTP'
 # Index file and start
-echo "Hello World!" > /var/www/index.html
+echo "Hello World!" > /var/www/html/index.html
 sudo service nginx start
 # make the redirection
 sed -i "/listen 80 default_server/a rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;" /etc/nginx/sites-available/default
