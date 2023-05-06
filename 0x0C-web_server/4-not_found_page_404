@@ -8,10 +8,10 @@ sudo ufw allow 'Nginx HTTP'
 echo "Hello World!" > /var/www/html/index.html
 sudo service nginx start
 # make the redirection
-sed -i "/listen 80 default_server/a rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;" /etc/nginx/sites-available/default
+sed -i "/server_name _;/a rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;" /etc/nginx/sites-available/default
 # 404 file
-echo "Ceci n'est pas une page" > /usr/share/nginx/html/custom_404_page.html
+echo "Ceci n'est pas une page" > /usr/share/nginx/html/404.html
 # make the redirection to 404
-sed -i "/listen 80 default_server/a error_page 404 /custom_404_page.html; location = /custom_404_page.html {root /usr/share/nginx/html;\n internal;}" /etc/nginx/sites-available/default
+sed -i "/listen 80 default_server/a error_page 404 /404html; location = /404.html {root /usr/share/nginx/html;\n internal;}" /etc/nginx/sites-available/default
 # restart nginx server
 sudo service nginx restart
