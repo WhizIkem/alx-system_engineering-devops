@@ -9,22 +9,22 @@ sudo apt install nginx -y
 # cofigure Firewall to allow request through port 80
 sudo ufw allow 'Nginx HTTP'
 
-sudo mkdir -p /var/www/html /etc/nginx /usr/share/nginx
+sudo mkdir -p /var/www/html
 
 # change permission to allow us to easily create files in this directory
-sudo chmod -R 777 /var/www /etc/nginx /usr/share/nginx
+sudo chmod -R 744 /var/www
 
 # Create index Index file
 sudo echo "Hello World!" > /var/www/html/index.html
 
 # Create a webpage for error 404
-sudo echo "Ceci n'est pas une page" > /usr/share/nginx/html/404.html
+sudo echo "Ceci n'est pas une page" > /var/www/html/404.html
 
 # make the redirection
 sudo sed -i "/server_name _;/a rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;" /etc/nginx/sites-available/default
 
 # make the redirection to 404
-sudo sed -i "/listen 80 default_server/a error_page 404 /404.html; location = /404.html {root /usr/share/nginx/html;\n internal;}" /etc/nginx/sites-available/default
+sudo sed -i "/listen 80 default_server/a error_page 404 /404.html; location = /404.html {root /var/www/html;\n internal;}" /etc/nginx/sites-available/default
 
 # restart nginx server
 sudo service nginx restart
