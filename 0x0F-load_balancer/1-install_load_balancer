@@ -8,7 +8,7 @@ sudo apt update -y
 sudo apt -y install haproxy
 
 #change permission to allow us to easily create files in this directory
-sudo chmod 777 /etc/default/haproxy /etc/haproxy
+sudo chmod 777 /etc/default/haproxy /etc/haproxy.cfg
 
 sudo echo "ENABLED=1" >> /etc/default/haproxy
 
