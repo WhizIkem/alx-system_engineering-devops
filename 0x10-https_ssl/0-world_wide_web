@@ -1,24 +1,17 @@
-#!usr/bin/env bash
+#!/usr/bin/env bash
+# Bash script that displays information about subdomains
 
-# Function to display information about a specific subdomain
-function display_subdomain_info() {
-    local domain="$1"
-    local subdomain="$2"
-    
-    local record_type=$(nslookup -type=ANY "$subdomain.$domain" | awk '/^'"$subdomain.$domain"'/{getline; print $1}')
-    local destination=$(nslookup "$subdomain.$domain" | awk '/^Address: /{print $2}')
-    
-    echo "The subdomain $subdomain is a $record_type record and points to $destination"
+func () {
+    if [ -z "$2" ]
+    then
+	dig www."$1" | grep -A1 'ANSWER SECTION:' | awk '/www/ {print "The subdomain www is a "$(NF - 1)" record and points to "$NF}'
+	dig lb-01."$1" | grep -A1 'ANSWER SECTION:' | awk '/lb-01/ {print "The subdomain lb-01 is a "$(NF - 1)" record and points to "$NF}'
+	dig web-01."$1" | grep -A1 'ANSWER SECTION:' | awk '/web-01/ {print "The subdomain web-01 is a "$(NF - 1)" record and points to "$NF}'
+	dig web-02."$1" | grep -A1 'ANSWER SECTION:' | awk '/web-02/ {print "The subdomain web-02 is a "$(NF - 1)" record and points to "$NF}'
+    else
+	dig "$2"."$1" | grep -A1 'ANSWER SECTION:' | awk -v SUBDOMAIN="$2" "/$2/"'{print "The subdomain "SUBDOMAIN" is a "$(NF - 1)" record and points to "$NF}'
+    fi
+    return 0
 }
 
-# Check if domain and subdomain parameters are provided
-if [[ -n "$1" && -n "$2" ]]; then
-    display_subdomain_info "$1" "$2"
-else
-    # Display information for default subdomains: www, lb-01, web-01, web-02
-    display_subdomain_info "$1" "www"
-    display_subdomain_info "$1" "lb-01"
-    display_subdomain_info "$1" "web-01"
-    display_subdomain_info "$1" "web-02"
-fi
-
+func "$1" "$2"
