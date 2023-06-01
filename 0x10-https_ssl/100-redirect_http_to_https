@@ -2,7 +2,7 @@ global
         log /dev/log    local0
         log /dev/log    local1 notice
         chroot /var/lib/haproxy
-        stats socket /run/haproxy/admin.sock mode 660 level admin
+        stats socket /run/haproxy/admin.sock mode 660 level admin expose-fd listeners
         stats timeout 30s
         user haproxy
         group haproxy
@@ -12,18 +12,16 @@ global
         ca-base /etc/ssl/certs
         crt-base /etc/ssl/private
 
-        # Default ciphers to use on SSL-enabled listening sockets.
-        # For more information, see ciphers(1SSL). This list is from:
-        #  https://hynek.me/articles/hardening-your-web-servers-ssl-ciphers/
-        ssl-default-bind-ciphers ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:ECDH+3DES:DH+3DES:RSA+AESGCM:RSA+AES:RSA+3DES:!aNULL:!MD5:!DSS
-        ssl-default-bind-options no-sslv3
+        # See: https://ssl-config.mozilla.org/#server=haproxy&server-version=2.0.3&config=intermediate
+        ssl-default-bind-ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384
+        ssl-default-bind-ciphersuites TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256
+        ssl-default-bind-options ssl-min-ver TLSv1.2 no-tls-tickets
 
 defaults
         log     global
         mode    http
         option  httplog
         option  dontlognull
-        option forwardfor
         timeout connect 5000
         timeout client  50000
         timeout server  50000
@@ -35,19 +33,28 @@ defaults
         errorfile 503 /etc/haproxy/errors/503.http
         errorfile 504 /etc/haproxy/errors/504.http
 
+#frontend front_server
+#    bind *:80
+#    default_backend back_server
+
 frontend www-http
-        bind *:80
-        reqadd X-Forwarded-Proto:\ http
-        default_backend web-backend
+    bind *:80
+    reqadd X-Forwarded-Proto:\ http
+    default_backend www-backend
 
 frontend www-https
-        bind *:443 ssl crt /etc/haproxy/ssl/www.whizikem.tech.pem
-	redirect scheme https code 301 if !{ ssl_fc }
-        reqadd X-Forwarded-Proto:\ https
-        default_backend web-backend
+    bind *:443 ssl crt /etc/haproxy/certs/www.whizikem.tech.pem
+    redirect scheme https code 301 if !{ ssl_fc }
+    reqadd X-Forwarded-Proto:\ https
+    default_backend www-backend
 
-backend web-backend
-        redirect scheme https if !{ ssl_fc }
-        balance roundrobin
-        server 162489-web-01 100.25.117.48:80 check
-        server 162489-web-02 54.146.58.123:80 check
+#backend back_server
+#    balance roundrobin
+#    server web-01 100.25.117.48:80 check
+#    server web-02 54.146.58.123:80 check
+
+backend www-backend
+    redirect scheme https if !{ ssl_fc }
+    balance roundrobin
+    server 861-web-01 100.25.117.48:80 check
+    server 861-web-02 54.146.58.123:80 check
