@@ -38,9 +38,9 @@ def get_employee_todo_progress(employee_id):
 
 # Example usage: provide the employee ID as a command-line argument
 
-
-if len(sys.argv) < 2:
-    print("Please provide the employee ID as a command-line argument.")
-else:
-    employee_id = int(sys.argv[1])
-    get_employee_todo_progress(employee_id)
+if __name__ == '__main__':
+    if len(sys.argv) < 2:
+        print("Please provide the employee ID as a command-line argument.")
+    else:
+        employee_id = int(sys.argv[1])
+        get_employee_todo_progress(employee_id)
