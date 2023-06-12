@@ -27,7 +27,7 @@ def get_employee_todo_progress(employee_id):
     in_progress_tasks = total_tasks - done_tasks
 
     # Display progress
-    progress_status = "OK" if done_tasks == total_tasks else "Incorrect"    
+    progress_status = "OK" if done_tasks == total_tasks else "Incorrect"
     print("Employee {} is done with tasks ({}/{}):".format(employee_name,
           done_tasks, total_tasks))
 
