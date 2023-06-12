@@ -15,7 +15,7 @@ def get_employee_todo_progress(employee_id):
     # Retrieve employee information
     response = requests.get(employee_url, verify=False)
     employee_data = response.json()
-    employee_name = employee_data['name']
+    employee_name = employee_data['username']
 
     # Retrieve employee's TODO list
     response = requests.get(todo_url, verify=False)
@@ -37,6 +37,7 @@ def get_employee_todo_progress(employee_id):
             print("\t", task['title'])
 
 # Example usage: provide the employee ID as a command-line argument
+
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
