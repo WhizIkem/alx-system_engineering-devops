@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """
-Using what you did in the task #0, extend your Python script to export data in the CSV format.
+Using what you did in the task #0, extend your Python script to export data
+in the CSV format.
 """
 import requests
 import csv
@@ -25,12 +26,14 @@ def get_employee_todo_progress(employee_id):
     filename = ("{}.csv".format(employee_id))
     with open(filename, "w", newline="") as csvfile:
         writer = csv.writer(csvfile)
-        writer.writerow(["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"])
+        writer.writerow(["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS",
+                        "TASK_TITLE"])
 
         # Write tasks to CSV
         for task in todo_data:
             task_completed_status = "True" if task["completed"] else "False"
-            writer.writerow([employee_id, employee_name, task_completed_status, task["title"]])
+            writer.writerow([employee_id, employee_name, task_completed_status,
+                            task["title"]])
 
     print("Data exported to {} successfully.".format(filename))
 
