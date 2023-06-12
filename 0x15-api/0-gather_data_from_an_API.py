@@ -4,7 +4,7 @@ Python script that, using this REST API, for a given employee ID,
 returns information about his/her TODO list progress.
 """
 import requests
-
+import sys
 
 def get_employee_todo_progress(employee_id):
     base_url = "https://jsonplaceholder.typicode.com"
@@ -35,7 +35,7 @@ def get_employee_todo_progress(employee_id):
             print("\t", task['title'])
 
 # Example usage: provide the employee ID as a command-line argument
-import sys
+
 
 if len(sys.argv) < 2:
     print("Please provide the employee ID as a command-line argument.")
