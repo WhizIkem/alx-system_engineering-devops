@@ -15,7 +15,7 @@ def get_employee_todo_progress(employee_id):
     # Retrieve employee information
     response = requests.get(employee_url, verify=False)
     employee_data = response.json()
-    employee_name = employee_data['username']
+    employee_name = employee_data['name']
 
     # Retrieve employee's TODO list
     response = requests.get(todo_url, verify=False)
@@ -27,7 +27,7 @@ def get_employee_todo_progress(employee_id):
     in_progress_tasks = total_tasks - done_tasks
 
     # Display progress
-    progress_status = "OK" if done_tasks == total_tasks else "Incorrect"
+    progress_status = "OK" if done_tasks != total_tasks else "Incorrect"
     print("Employee {} is done with tasks ({}/{}):".format(employee_name,
           done_tasks, total_tasks))
 
