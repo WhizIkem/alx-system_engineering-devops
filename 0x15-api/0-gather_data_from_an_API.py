@@ -3,27 +3,42 @@
 Python script that, using this REST API, for a given employee ID,
 returns information about his/her TODO list progress.
 """
+import requests
 
-f __name__ == "__main__":
 
-    import requests
-    import sys
+def get_employee_todo_progress(employee_id):
+    base_url = "https://jsonplaceholder.typicode.com"
+    employee_url = ("{}/users/{}".format(base_url, employee_id))
+    todo_url = ("{}/todos?userId={}".format(base_url, employee_id))
 
-    if len(sys.argv) == 2 and sys.argv[1].isdigit():
-        u_url = 'https://jsonplaceholder.typicode.com/users/'
-        td_url = 'https://jsonplaceholder.typicode.com/todos?userId='
+    # Retrieve employee information
+    response = requests.get(employee_url, verify=False)
+    employee_data = response.json()
+    employee_name = employee_data['name']
 
-        EMPLOYEE_NAME = requests.get(u_url + sys.argv[1]).json()['name']
-        NUMBER_OF_DONE_TASKS = len([task for task in requests.
-                                    get(td_url + sys.argv[1]).json()
-                                    if task['completed'] is True])
-        TOTAL_NUMBER_OF_TASKS = len(requests.get(td_url + sys.argv[1]).json())
-        DONE_TASKS_TITLES = [task['title'] for task in requests.
-                             get(td_url + sys.argv[1]).json()
-                             if task['completed'] is True]
+    # Retrieve employee's TODO list
+    response = requests.get(todo_url, verify=False)
+    todo_data = response.json()
 
-        print('Employee {} is done with tasks({}/{}):'.
-              format(EMPLOYEE_NAME, NUMBER_OF_DONE_TASKS,
-                     TOTAL_NUMBER_OF_TASKS))
-        for TASK_TITLE in DONE_TASKS_TITLES:
-            print('\t {}'.format(TASK_TITLE))
+    # Calculate progress
+    total_tasks = len(todo_data)
+    done_tasks = sum(task['completed'] for task in todo_data)
+    in_progress_tasks = total_tasks - done_tasks
+
+    # Display progress
+    print("Employee {} is done with tasks ({}/{}):".format(employee_name,
+          done_tasks, total_tasks))
+
+    # Display completed task titles
+    for task in todo_data:
+        if task['completed']:
+            print("\t", task['title'])
+
+# Example usage: provide the employee ID as a command-line argument
+import sys
+
+if len(sys.argv) < 2:
+    print("Please provide the employee ID as a command-line argument.")
+else:
+    employee_id = int(sys.argv[1])
+    get_employee_todo_progress(employee_id)
