@@ -4,8 +4,8 @@ Using what you did in the task #0, extend your Python script to export data
 in the CSV format.
 """
 import requests
-import csv
 import sys
+import csv
 
 
 def get_employee_todo_progress(employee_id):
@@ -21,6 +21,10 @@ def get_employee_todo_progress(employee_id):
     # Retrieve employee's TODO list
     response = requests.get(todo_url, verify=False)
     todo_data = response.json()
+
+    # Count total tasks and completed tasks
+    total_tasks = len(todo_data)
+    done_tasks = sum(1 for task in todo_data if task["completed"])
 
     # Create CSV file
     filename = ("{}.csv".format(employee_id))
