@@ -7,6 +7,17 @@ import requests
 import sys
 
 
+def verify_user_id(file_path, user_id):
+    with open(file_path, 'r') as file:
+        data = json.load(file)
+
+    if len(data) != 1:
+        return False
+
+    entry = data[0]
+    return entry.get('id') == user_id
+
+
 def get_employee_todo_progress(employee_id):
     base_url = "https://jsonplaceholder.typicode.com"
     employee_url = ("{}/users/{}".format(base_url, employee_id))
