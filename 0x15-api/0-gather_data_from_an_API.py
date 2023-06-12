@@ -23,11 +23,11 @@ def get_employee_todo_progress(employee_id):
 
     # Calculate progress
     total_tasks = len(todo_data)
-    done_tasks = sum(task['completed'] for task in todo_data)
-    in_progress_tasks = total_tasks - done_tasks
+    done_tasks = sum(1 for task in todo_data if task['completed'])
 
     # Display progress
-    progress_status = "OK" if done_tasks == total_tasks else "Incorrect"
+    progress_status = "{}/{}".format(done_tasks, total_tasks)
+    # progress_status = "OK" if done_tasks == total_tasks else "Incorrect"
     print("Employee {} is done with tasks ({}/{}):".format(employee_name,
           done_tasks, total_tasks))
 
